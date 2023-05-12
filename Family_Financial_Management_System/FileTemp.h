@@ -14,5 +14,6 @@ struct FileTemp
 {
 	string name;
 	vector<So> so;
+	double sum = 0;
 };
 

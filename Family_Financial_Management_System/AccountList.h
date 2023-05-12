@@ -5,9 +5,11 @@ class AccountList :
 {
 private:
     vector<Account> list;
+    
+    double sum;
 public:
-    AccountList(){}
-    ~AccountList(){}
+    AccountList() { this->sum = 0.0; }
+    virtual ~AccountList(){}
 
     void showall()const noexcept;//展示所有账户
 
@@ -20,8 +22,9 @@ public:
 
     int num_of_info()const noexcept;//返回大小
 
-    string file_get_time(int index)noexcept;
-    string file_get_usefor(int index)noexcept;
-    double file_get_money(int index)noexcept;
+    string file_get_time(int index)const noexcept;
+    string file_get_usefor(int index)const noexcept;
+    double file_get_money(int index)const noexcept;
+    double file_get_sum()const noexcept;
 };
 

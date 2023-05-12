@@ -247,6 +247,14 @@ void _FAMILY_FINANCIAL_MANAGEMENT_SYSTEM_(LinkList &linkList)
 			flag = 0;
 			prime = 1;
 		}
+		else if (order == "clear") {
+			linkList.clear_inf();
+			cout << "回收成功" << endl;
+		}
+		else if (order == "sort") {
+			linkList.LinkList_sort();
+			cout << "排序成功" << endl;
+		}
 		else {
 			cout << order << ": command not found" << endl;
 			cout << "Try 'help' for more information." << endl;

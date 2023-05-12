@@ -10,6 +10,8 @@ class LinkList {
 private:
     class Node {
     public:
+        string jzy_name;
+        AccountList jzy_account;
         string name;//家庭成员姓名
         AccountList account;//账户
         Node* next;
@@ -31,6 +33,7 @@ public:
     double file_out_account_money(string name, int index);
 
     void create(int n,vector<FileTemp>vf);//初始化n个结点的单链表
+    void clear_inf();
 
     void print() const noexcept;//打印所有用户的数据
     void print(string name) const noexcept;//打印指定用户的数据
@@ -49,10 +52,12 @@ public:
     void insertBeheadIndex(int index,string name) noexcept;//在索引为index之后的位置插入数据为data的结点
     void addtoHead(string name) noexcept;//头插
 
-    //添加账户信息
+    //更改账户信息
     void add_account(string name)noexcept;
     void delete_account(string name)noexcept;
 
     void deleteByIndex(int index) noexcept;//删除索引为index的结点
     void deleteByIndex(string name) noexcept;//删除名字为name的结点
+
+    void LinkList_sort()noexcept;//简单的一个排序
 };

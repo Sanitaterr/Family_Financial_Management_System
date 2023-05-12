@@ -49,6 +49,51 @@ void LinkList::create(int n,vector<FileTemp>vf) //创建结点个数为n的链表
 	}
 }
 
+bool cmp(FileTemp f1,FileTemp f2)
+{
+	return f1.sum < f2.sum;
+}
+
+void LinkList::LinkList_sort()noexcept //简单的一个排序
+{
+	vector<FileTemp> vf;
+	int length_prime = length;
+	Node* cur = head->next;
+	int index = 0;
+	while (cur) {
+		double all = 0.0;
+
+		vector<So>fs;
+		for (int i = 0; i < cur->account.num_of_info(); i++) {
+			fs.push_back({ cur->account.file_get_time(i), cur->account.file_get_usefor(i), cur->account.file_get_money(i) });
+			all += cur->account.file_get_money(i);
+		}
+		vf.push_back({ cur->name, fs });
+		vf[index].sum += all;
+		index++;
+
+		cur = cur->next;
+	}
+	vector<FileTemp> vf_prime = vf;
+	sort(vf_prime.begin(), vf_prime.end(),cmp);
+	clear_inf();
+	length = length_prime;
+	create(length, vf_prime);
+}
+
+void LinkList::clear_inf()
+{
+	Node* cur = head->next;
+	while (cur) {
+		Node* temp = cur;
+		cur = temp->next;
+		delete temp;
+	}
+	head = new Node;
+	head->next = nullptr;
+	length = 0;
+}
+
 void LinkList::print() const noexcept //打印所有用户账户
 {
 	Node* cur = head->next;
@@ -263,11 +308,6 @@ void LinkList::deleteByIndex(string name) noexcept //删除名字为name的结点
 		cur = cur->next;
 	}
 }
-
-
-
-
-
 
 vector<string> LinkList::file_out_name()
 {
