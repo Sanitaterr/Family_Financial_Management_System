@@ -56,32 +56,6 @@ bool cmp(FileTemp f1, FileTemp f2)
 	return f1.sum < f2.sum;
 }
 
-void LinkList::LinkList_sort()noexcept //简单的一个排序
-{
-	vector<FileTemp> vf;
-	int length_prime = length;
-	Node* cur = head->next;
-	int index = 0;
-	while (cur) {
-		double all = 0.0;
-
-		vector<So>fs;
-		for (int i = 0; i < cur->account.num_of_info(); i++) {
-			fs.push_back({ cur->account.file_get_time(i), cur->account.file_get_usefor(i), cur->account.file_get_money(i) });
-			all += cur->account.file_get_money(i);
-		}
-		vf.push_back({ cur->name, fs });
-		vf[index].sum += all;
-		index++;
-
-		cur = cur->next;
-	}
-	vector<FileTemp> vf_prime = vf;
-	sort(vf_prime.begin(), vf_prime.end(), cmp);
-	clear_inf();
-	length = length_prime;
-	create(length, vf_prime);
-}
 
 void LinkList::clear_inf()
 {
@@ -114,7 +88,52 @@ void LinkList::print() const noexcept //打印所有用户账户
 	}
 }
 
-class SearchDeal :public LinkList::IDealC
+struct Data
+{
+	string name;
+	AccountList list;
+	double sum;
+};
+
+class SortDeal : public LinkList::IDeal
+{
+private:
+	vector<Data> ls;
+public:
+	virtual int deal(const AccountList& l, const string& name, int index)
+	{
+		Data d;
+		d.name = name;
+		d.list = l;
+		d.sum = 0;
+		for (int i = 0; i < l.num_of_info(); i++)
+		{
+			d.sum += l.file_get_money(i);
+		}
+		ls.push_back(d);
+		return LinkList::STATUS_RUN;
+	}
+
+	vector<Data> getResult()
+	{
+		sort(ls.begin(), ls.end(), [](const Data& l, const Data& r) {
+			return l.sum > r.sum ;
+			});
+		return ls;
+	}
+};
+void LinkList::LinkList_sort()noexcept //简单的一个排序
+{
+	SortDeal s;
+	this->foreachc(s);
+	for (Data& d : s.getResult())
+	{
+		d.list.showall();
+	}
+}
+
+
+class SearchDeal :public LinkList::IDeal
 {
 
 
@@ -122,6 +141,7 @@ private:
 	int idx = -1;
 	AccountList _data;
 	string _name;
+	int findStatus = LinkList::STATUS_STOP;
 public:
 	SearchDeal(const string& n) :_name(n)
 	{
@@ -133,6 +153,12 @@ public:
 		_name = n;
 	}
 
+
+	void setFIND_STATUS(int s)
+	{
+		this->findStatus = s;
+	}
+
 	const	AccountList* getResult()const noexcept
 	{
 		if (idx >= 0)
@@ -142,13 +168,13 @@ public:
 
 	virtual int deal(const AccountList& l, const string& name, int index)
 	{
-		if (_name.compare(name)==0)
+		if (_name.compare(name) == 0)
 		{
 			idx = index;
 			_data = l;
-			return 0;
+			return findStatus;
 		}
-		return 1;
+		return LinkList::STATUS_RUN;
 	}
 };
 
@@ -157,8 +183,8 @@ void LinkList::print(string name) const noexcept //打印指定用户的数据
 
 	SearchDeal s(name);
 
-	this->foreach(s);
-	if(s.getResult()==nullptr) {
+	this->foreachc(s);
+	if (s.getResult() == nullptr) {
 		cout << "The user does not exist" << endl;
 		return;
 	}
@@ -328,42 +354,52 @@ void LinkList::deleteByIndex(int index) noexcept //删除索引为index的结点
 
 void LinkList::deleteByIndex(string name) noexcept //删除名字为name的结点
 {
-	if (!search(name)) {
+	SearchDeal ser(name);
+	ser.setFIND_STATUS(STATUS_DELETE);
+	this->foreach(ser);
+
+	if (ser.getResult() == nullptr) {
 		cout << "The user does not exist" << endl;
 		return;
 	}
-
-	Node* cur = head;
-	while (cur->next) {
-		if (cur->next->name == name) {
-			Node* temp = cur->next;
-			cur->next = temp->next;
-			delete temp;
-			--length;
-			cout << "Successfully delete" << endl;
-			return;
-		}
-		cur = cur->next;
-	}
+	cout << "Successfully delete" << endl;
+	return;
 }
 
 int LinkList::foreach(IDeal& f)
 {
 	Node* cur = head->next;
 	int i = 0;
-	while (cur) {
-		f.deal(cur->account, cur->name, i++);
+	int status = STATUS_RUN;
+	Node* last = head;
+	while (cur && status == STATUS_RUN) {
+
+		status = f.deal(cur->account, cur->name, i++);
+		if (status == STATUS_DELETE)
+		{
+			auto dl = cur;
+			last->next = dl->next;
+			delete dl;
+			cur = last->next;
+			length--;
+			continue;
+		}
+		last = cur;
 		cur = cur->next;
 	}
 	return i;
 }
 
-int LinkList::foreach(IDealC& f) const
+int LinkList::foreachc(IDeal& f) const
 {
 	Node* cur = head->next;
 	int i = 0;
-	while (cur) {
-		f.deal(cur->account, cur->name, i++);
+	int status = STATUS_RUN;
+	Node* last = head;
+	while (cur && status == STATUS_RUN) {
+
+		status = f.deal(cur->account, cur->name, i++);
+		last = cur;
 		cur = cur->next;
 	}
 	return i;

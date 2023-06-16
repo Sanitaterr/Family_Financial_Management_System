@@ -25,20 +25,15 @@ public:
     class IDeal
     {
     public:
-        virtual int deal(AccountList& l,const string& name, int index) = 0;
-    };
-
-    class IDealC
-    {
-    public:
-        virtual int deal(const AccountList& l, const string& name, int index) = 0;
+        virtual int deal(const AccountList& l,const string& name, int index) = 0;
     };
 
 
+    static const int STATUS_RUN = 1,STATUS_STOP=0,STATUS_DELETE=-1;
 
     virtual ~LinkList() {}
     int foreach(IDeal&);
-    int foreach(IDealC&) const;
+    int foreachc(IDeal&) const;
     vector<string> file_out_name();
     string file_out_account_time(string name,int index);
     string file_out_account_usefor(string name, int index);
