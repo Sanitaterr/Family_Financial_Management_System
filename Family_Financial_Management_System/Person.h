@@ -1,6 +1,5 @@
 #pragma once
 
-#include <bits/stdc++.h>
 #include "FileTemp.h"
 #include "AccountList.h"
 
@@ -10,8 +9,6 @@ class LinkList {
 private:
     class Node {
     public:
-        string jzy_name;
-        AccountList jzy_account;
         string name;//家庭成员姓名
         AccountList account;//账户
         Node* next;
@@ -25,8 +22,23 @@ public:
         head->next = nullptr;
     }
 
-    virtual ~LinkList() {}
+    class IDeal
+    {
+    public:
+        virtual int deal(AccountList& l,const string& name, int index) = 0;
+    };
 
+    class IDealC
+    {
+    public:
+        virtual int deal(const AccountList& l, const string& name, int index) = 0;
+    };
+
+
+
+    virtual ~LinkList() {}
+    int foreach(IDeal&);
+    int foreach(IDealC&) const;
     vector<string> file_out_name();
     string file_out_account_time(string name,int index);
     string file_out_account_usefor(string name, int index);

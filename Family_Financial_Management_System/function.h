@@ -1,9 +1,11 @@
 #pragma once
 
-#define filename "Person.txt"
+constexpr auto filename = "Person.txt";
 
 #include "Person.h"
 #include "FileTemp.h"
+#include <fstream>
+using namespace std;
 
 void show();
 void get_help();
@@ -26,6 +28,8 @@ void get_help()
 	cout << "Use `" << "\033[34m" << "delete" << "\033[0m" << "' to delete user information." << endl;
 	cout << "Use `" << "\033[34m" << "add account" << "\033[0m" << "' to add the specified user account information." << endl;
 	cout << "Use `" << "\033[34m" << "delete account" << "\033[0m" << "' to delete the specified user account information." << endl;
+	cout << "Use `" << "\033[34m" << "clear" << "\033[0m" << "' to clear all data." << endl;
+	cout << "Use `" << "\033[34m" << "sort" << "\033[0m" << "' to sort all the data." << endl;
 }
 
 void file_operate_in(LinkList& linkList)
@@ -66,7 +70,6 @@ void file_operate_in(LinkList& linkList)
 				usefor.clear();
 				money.clear();
 			}
-
 
 			name_temp = buffer.substr(5, buffer.length() - 5);
 			string name = buffer.substr(5, buffer.length() - 5);
@@ -249,11 +252,10 @@ void _FAMILY_FINANCIAL_MANAGEMENT_SYSTEM_(LinkList &linkList)
 		}
 		else if (order == "clear") {
 			linkList.clear_inf();
-			cout << "回收成功" << endl;
+			cout << "has all cleared" << endl;
 		}
 		else if (order == "sort") {
 			linkList.LinkList_sort();
-			cout << "排序成功" << endl;
 		}
 		else {
 			cout << order << ": command not found" << endl;
@@ -262,4 +264,3 @@ void _FAMILY_FINANCIAL_MANAGEMENT_SYSTEM_(LinkList &linkList)
 	}
 	return;
 }
-
