@@ -21,6 +21,7 @@ public:
      * @return
      */
     virtual bool hasNext() const noexcept = 0;
+
     /**
      * 移动到下一项
      */
@@ -44,6 +45,7 @@ public:
      */
 
     virtual void remove() noexcept = 0;
+
     /**
      * 在当前迭代项后新增一项
      * @param obj
@@ -75,8 +77,7 @@ struct LinkNode {
     _data data;
 
     static void connect(LinkNode<_data> *before, LinkNode<_data> *after) {
-        if (before != nullptr)
-        {
+        if (before != nullptr) {
             before->next = after;
         }
 
@@ -93,101 +94,30 @@ struct LinkNode {
 };
 
 /**
- * 链表类
- * @tparam _data
+ * 抽象列表类
+ * @tparam _data 数据域类型
+ * @tparam _iter 迭代器类型
  */
-
-template<class _data>
-class LinkList {
+template<class _data, class _iter>
+class BaseList {
 public:
-    typedef LinkNode<_data> node;
-    /**
-     * 链表迭代器
-     */
-    class LinkListIter : public Iter<_data> {
-    public:
-        explicit LinkListIter(node *parent) : parent(parent) {
-            if (parent == nullptr)
-                throw "can not be null";
-        }
-
-        bool hasNext() const noexcept override {
-            return parent->next != nullptr;
-        }
-
-        void next() noexcept override {
-            movePtr(*this);
-        }
-
-        _data value() const noexcept override {
-            if(parent== nullptr)
-                return _data();
-            return parent->data;
-        }
-
-        void update(const _data d) noexcept override {
-            parent->data = d;
-        }
-
-        void remove() noexcept override {
-            node *now = parent;
-            node* last=now->pre;
-            node* nxt=now->next;
-            node::connect(last,nxt);
-            delete now;
-            parent=nxt;
-        }
-
-        void insert(const _data &obj) noexcept override {
-            node *newone = new node();
-            newone->data = obj;
-            node* t=parent->next;
-            node::connect(parent,newone);
-            node::connect(newone,t);
-            parent=newone->next;
-        }
-
-    private:
-        inline static node *movePtr(LinkListIter &iter) {
-            node *p = iter.parent;
-            iter.parent = p->next;
-            return p;
-        }
-
-        node *parent = nullptr;
-    };
     /**
      * 获取迭代器
      * @return
      */
-    LinkListIter get() {
-        return LinkListIter(&head);
-    }
+    virtual _iter get() noexcept = 0;
 
     /**
      * 插入
      * @param d
      */
-    void insert(const _data d) {
-        LinkListIter iter = get();
-        iter.insert(d);
-    }
+    virtual void insert(const _data d) noexcept = 0;
+
     /**
      * 计数总数
      * @return
      */
-    int count() const {
-        LinkListIter iter = get();
-        int cnt = 0;
-        while (iter.hasNext()) {
-            cnt++;
-            iter.next();
-        }
-        return cnt;
-    }
-
-private:
-    node head;
+    virtual int count() noexcept = 0;
 };
 
 
