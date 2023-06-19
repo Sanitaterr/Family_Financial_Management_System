@@ -9,7 +9,7 @@
 #include <cstring>
 #include "ListImpl.h"
 
-typedef LinkList<Account> _list;
+typedef FixedArrayList<Account,50> _list;
 _list accountSource;
 using namespace std;
 

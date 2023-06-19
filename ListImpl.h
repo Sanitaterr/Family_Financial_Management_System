@@ -24,7 +24,7 @@ public:
         return _iter(&head);
     }
 
-    void insert(const _data& d) noexcept override {
+    void insert(const _data &d) noexcept override {
         _iter iter = get();
         iter.insert(d);
     }
@@ -43,5 +43,30 @@ private:
     node head;
 };
 
+
+/**
+ * 定长数组列表
+ * @tparam _data 数据类型
+ * @tparam _SIZE 数组长度
+ */
+template<class _data, int _SIZE>
+class FixedArrayList : public BaseList<_data, ArrayIter<_data>> {
+public:
+    ArrayIter<_data> get() noexcept override {
+        return ArrayIter<_data>(source, &cnt);
+    }
+
+    void insert(const _data &d) noexcept override {
+        get().insert(d);
+    }
+
+    int count() noexcept override {
+        return cnt;
+    }
+
+private:
+    _data source[_SIZE];
+    int cnt = 0;
+};
 
 #endif //HOME_MONEY_LISTIMPL_H

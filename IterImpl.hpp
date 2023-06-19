@@ -71,12 +71,12 @@ private:
 template<class _data>
 class ArrayIter : public Iter<_data> {
 public:
-    ArrayIter(_data *source,int size) : source(source),index(0),cnt(size){
+    ArrayIter(_data *source, int *size) : source(source), index(0), cnt(size) {
 
     }
 
     bool hasNext() const noexcept override {
-        return cnt>index;
+        return getCnt() > index;
     }
 
     void next() noexcept override {
@@ -84,36 +84,47 @@ public:
     }
 
     _data value() const noexcept override {
-        if(index>=cnt)
+        int c = getCnt();
+        if (index >= c)
             return _data();
         return source[index];
     }
 
     void update(const _data &d) noexcept override {
-        source[index]=d;
+        source[index] = d;
     }
 
     void remove() noexcept override {
-        for(int i=index;i<cnt-1;i++)
-        {
-            source[index]=source[index+1];
+        int c = getCnt();
+        for (int i = index; i < c - 1; i++) {
+            source[index] = source[index + 1];
         }
-        --cnt;
+        downCnt();
     }
 
     void insert(const _data &obj) noexcept override {
-        for(int i=index+1;i<cnt+1;i++)
-        {
-            source[i]=source[i-1];
-        }
-        source[index]=obj;
-        cnt++;
+        source[getCnt()]=obj;
+        upCnt();
     }
 
 private:
+    int getCnt() const {
+        return *cnt;
+    }
+
+    int upCnt() {
+        (*cnt)++;
+        return getCnt();
+    }
+
+    int downCnt() {
+        (*cnt)--;
+        return getCnt();
+    }
+
     _data *source;
     int index;
-    int cnt;
+    int *cnt;
 };
 
 #endif //HOME_MONEY_ITERIMPL_HPP
