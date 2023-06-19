@@ -20,11 +20,11 @@ public:
     typedef LinkNode<_data> node;
     typedef LinkListIter<_data> _iter;
 
-    LinkListIter<_data> get() noexcept override {
+    _iter get() noexcept override {
         return _iter(&head);
     }
 
-    void insert(const _data d) noexcept override {
+    void insert(const _data& d) noexcept override {
         _iter iter = get();
         iter.insert(d);
     }

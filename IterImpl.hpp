@@ -4,6 +4,7 @@
 
 #ifndef HOME_MONEY_ITERIMPL_HPP
 #define HOME_MONEY_ITERIMPL_HPP
+
 #include "base.hpp"
 
 
@@ -34,7 +35,7 @@ public:
         return parent->data;
     }
 
-    void update(const _data d) noexcept override {
+    void update(const _data &d) noexcept override {
         parent->data = d;
     }
 
@@ -65,4 +66,54 @@ private:
 
     node *parent = nullptr;
 };
+
+
+template<class _data>
+class ArrayIter : public Iter<_data> {
+public:
+    ArrayIter(_data *source,int size) : source(source),index(0),cnt(size){
+
+    }
+
+    bool hasNext() const noexcept override {
+        return cnt>index;
+    }
+
+    void next() noexcept override {
+        index++;
+    }
+
+    _data value() const noexcept override {
+        if(index>=cnt)
+            return _data();
+        return source[index];
+    }
+
+    void update(const _data &d) noexcept override {
+        source[index]=d;
+    }
+
+    void remove() noexcept override {
+        for(int i=index;i<cnt-1;i++)
+        {
+            source[index]=source[index+1];
+        }
+        --cnt;
+    }
+
+    void insert(const _data &obj) noexcept override {
+        for(int i=index+1;i<cnt+1;i++)
+        {
+            source[i]=source[i-1];
+        }
+        source[index]=obj;
+        cnt++;
+    }
+
+private:
+    _data *source;
+    int index;
+    int cnt;
+};
+
 #endif //HOME_MONEY_ITERIMPL_HPP

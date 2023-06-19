@@ -38,7 +38,7 @@ public:
      * 更新当前迭代中数据的值
      * @param d
      */
-    virtual void update(const _data d) noexcept = 0;
+    virtual void update(const _data &d) noexcept = 0;
 
     /**
      * 移除当前迭代项
@@ -111,7 +111,7 @@ public:
      * 插入
      * @param d
      */
-    virtual void insert(const _data d) noexcept = 0;
+    virtual void insert(const _data &d) noexcept = 0;
 
     /**
      * 计数总数
