@@ -5,10 +5,12 @@
 
 using namespace std;
 Account temps[100];
+
 #include "Cmd.h"
 #include "CommandImpl.h"
 
 FindAccountCommand findAccountCommand;
+
 void init() {
     importCommand(&findAccountCommand);
     string names[] = {"jack", "tom", "tony", "gray", "pip", "nick"};
@@ -19,13 +21,10 @@ void init() {
 }
 
 
-
 int main() {
     init();
-    string cmd="find -name jack";
-    char helptext[500];
-    help("find",helptext,500);
-    cout<<helptext;
-
+    string cmd;
+    getline(std::cin,cmd);
+    cout << runCMD(cmd.c_str(), false);
     return 0;
 }

@@ -101,7 +101,7 @@ CommandEnum removeCommand(const char *name);
  * @param cmd
  * @return
  */
-CommandEnum runCMD(const char *cmd);
+CommandEnum runCMD(const char *cmd, bool onlyEnable=false);
 
 /**
  * 获取命令帮助提示文本

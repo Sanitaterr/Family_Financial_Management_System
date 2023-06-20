@@ -6,6 +6,8 @@
 #define HOME_MONEY_STRINGUTILS_H
 
 #include <vector>
+#include <string>
+#include <cstring>
 
 
 namespace StringUtils {

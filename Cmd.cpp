@@ -5,6 +5,7 @@
 #include <map>
 #include "StringUtils.h"
 #include <string>
+#include <stdexcept>
 
 
 using namespace std;
@@ -73,17 +74,19 @@ CommandEnum removeCommand(const char *name) {
     return NOT_FOUND;
 }
 
-CommandEnum runCMD(const char *cmd) {
+CommandEnum runCMD(const char *cmd, bool onlyEnable) {
     CMD c = read(cmd);
     if (test(c.cmd.c_str()) == EXSIST) {
         IOnCommand &cmdimpl = *cmdMap[c.cmd];
-        auto beg = c.params.begin();
-        auto ed = c.params.end();
-        while (beg < ed) {
-            if (!(*beg).enable) {
-                c.params.erase(beg);
+        if (onlyEnable) {
+            auto beg = c.params.begin();
+            auto ed = c.params.end();
+            while (beg < ed) {
+                if (!(*beg).enable) {
+                    c.params.erase(beg);
+                }
+                beg++;
             }
-            beg++;
         }
         auto *params = new Param[c.params.size()];
         for (int i = 0; i < c.params.size(); i++) {
