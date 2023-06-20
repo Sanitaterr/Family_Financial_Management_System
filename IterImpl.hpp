@@ -71,7 +71,7 @@ private:
 template<class _data>
 class ArrayIter : public Iter<_data> {
 public:
-    ArrayIter(_data *source, int *size) : source(source), index(0), cnt(size) {
+    ArrayIter(_data *source, int *size) : source(source), index(-1), cnt(size) {
 
     }
 

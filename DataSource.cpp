@@ -29,7 +29,6 @@ bool getAccount(const char *name, Account *des) {
             return true;
         }
     }
-
     return false;
 }
 
