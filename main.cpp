@@ -23,7 +23,9 @@ void init() {
 int main() {
     init();
     string cmd="find -name jack";
-    runCMD(cmd.c_str());
+    char helptext[500];
+    help("find",helptext,500);
+    cout<<helptext;
 
     return 0;
 }

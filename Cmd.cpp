@@ -102,7 +102,7 @@ CommandEnum runCMD(const char *cmd) {
 CommandEnum help(const char *cmdName, char *des, int size) {
     IOnCommand *cmd = cmdMap[cmdName];
     if (cmd != nullptr) {
-        cmd->commandName(des, size);
+        cmd->help(des, size);
         return OK;
     }
     return NOT_FOUND;

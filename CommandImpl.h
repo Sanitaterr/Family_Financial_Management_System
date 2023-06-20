@@ -8,6 +8,9 @@
 
 #include "Cmd.h"
 
+/**
+ * 查找账户的简单实现
+ */
 class FindAccountCommand:public IOnCommand
 {
 public:
