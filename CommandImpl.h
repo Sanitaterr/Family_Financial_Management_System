@@ -23,5 +23,18 @@ public:
     bool isAcceptParam(const char *cmd) override;
 };
 
+class HelpCommand:public IOnCommand
+{
+public:
+    CommandEnum onCommand(const Param *params, const int &size) override;
+
+    void commandName(char *des, const int &size) override;
+
+    void help(char *des, const int &size) override;
+
+    bool isAcceptParam(const char *cmd) override;
+};
+
+
 
 #endif //HOME_MONEY_COMMANDIMPL_H

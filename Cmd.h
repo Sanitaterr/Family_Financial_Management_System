@@ -36,7 +36,7 @@ struct Param {
     /**
      * 是否有效
      */
-    bool enable=false;
+    bool enable = false;
 };
 
 /**
@@ -51,6 +51,7 @@ public:
      * @return 命令执行情况
      */
     virtual CommandEnum onCommand(const Param *params, const int &size) = 0;
+
     /**
      * 获取命令名称
      * @param des 目标指针
@@ -58,6 +59,7 @@ public:
      */
 
     virtual void commandName(char *des, const int &size) = 0;
+
     /**
      * 获取命令帮助文本
      * @param des
@@ -65,6 +67,7 @@ public:
      */
 
     virtual void help(char *des, const int &size) = 0;
+
     /**
      * 是否接受的参数
      * @param cmd 参数名
@@ -73,13 +76,13 @@ public:
 
     virtual bool isAcceptParam(const char *cmd) = 0;
 };
+
 /**
  * 命令查询数据，null不过滤，非null根据值和字段过滤
  */
-struct CommandSerachObject
-{
-    char* name;
-    char* paramName;
+struct CommandSerachObject {
+    char *name = nullptr;
+    char *paramName = nullptr;
 };
 
 /**
@@ -96,12 +99,13 @@ CommandEnum importCommand(IOnCommand *cmd);
  * @return
  */
 CommandEnum removeCommand(const char *name);
+
 /**
  * 执行命令
  * @param cmd
  * @return
  */
-CommandEnum runCMD(const char *cmd, bool onlyEnable=false);
+CommandEnum runCMD(const char *cmd, bool onlyEnable = false);
 
 /**
  * 获取命令帮助提示文本
@@ -110,7 +114,7 @@ CommandEnum runCMD(const char *cmd, bool onlyEnable=false);
  * @param size
  * @return
  */
-CommandEnum help(const char *cmdName,char* des,int size);
+CommandEnum help(const char *cmdName, char *des, int size);
 
 /**
  * 查找命令名，根据命令查询数据
@@ -119,6 +123,6 @@ CommandEnum help(const char *cmdName,char* des,int size);
  * @param size
  * @return
  */
-int find(const CommandSerachObject& q,char* cmds[50],int size);
+int find(const CommandSerachObject &q, char *cmds[50], int size);
 
 #endif //HOME_MONEY_CMD_H

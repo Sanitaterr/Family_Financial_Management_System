@@ -27,7 +27,8 @@ void write(Account account) {
 class IInvoker {
 public:
     virtual void invoke(const char *val, std::vector<Account> &res) = 0;
-    virtual ~IInvoker()=default;
+
+    virtual ~IInvoker() = default;
 };
 
 typedef unique_ptr<IInvoker> _invoker;
@@ -69,7 +70,8 @@ public:
     }
 };
 
-_invoker invokers[] = {_invoker(new FindByNameInvoker()), _invoker(new FindByAgeInvoker()),_invoker (new SortInvoker())};
+_invoker invokers[] = {_invoker(new FindByNameInvoker()), _invoker(new FindByAgeInvoker()),
+                       _invoker(new SortInvoker())};
 
 
 void invokeWithParam(std::vector<Account> &res, const char *key, IInvoker &invoker, const Param &param) {
@@ -90,7 +92,7 @@ CommandEnum FindAccountCommand::onCommand(const Param *params, const int &size) 
         invokeWithParam(results, FINDACCOUNT_PARAMS[FIND_FUNC_BYAGE], *invokers[FIND_FUNC_BYAGE], params[i]);
         invokeWithParam(results, FINDACCOUNT_PARAMS[FIND_FUNC_SORT], *invokers[FIND_FUNC_SORT], params[i]);
     }
-    for(auto i:results)
+    for (auto i: results)
         write(i);
     return OK;
 }
@@ -107,5 +109,33 @@ bool FindAccountCommand::isAcceptParam(const char *cmd) {
     for (auto &i: FINDACCOUNT_PARAMS)
         if (StringUtils::equal(cmd, i))
             return true;
+    return false;
+}
+
+
+CommandEnum HelpCommand::onCommand(const Param *params, const int &size) {
+    CommandSerachObject ser;
+    char name[100][50];
+    char *ptr[100];
+    for (int i = 0; i < 100; i++)
+        ptr[i] = name[i];
+    int s = find(ser, ptr, 100);
+    char text[1000];
+    for (int i = 0; i < s; i++) {
+        ::help(ptr[i], text, 1000);
+        cout << "cmd:" << ptr[i] << " help:" << text << endl;
+    }
+    return OK;
+}
+
+void HelpCommand::commandName(char *des, const int &size) {
+    ::strcpy(des, "help");
+}
+
+void HelpCommand::help(char *des, const int &size) {
+    ::strcpy(des,"just for help");
+}
+
+bool HelpCommand::isAcceptParam(const char *cmd) {
     return false;
 }
